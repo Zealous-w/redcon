@@ -93,6 +93,8 @@ type Conn interface {
 	PeekPipeline() []Command
 	// NetConn returns the base net.Conn connection
 	NetConn() net.Conn
+
+	FlushOut()
 }
 
 // NewServer returns a new Redcon server configured on "tcp" network net.
@@ -419,6 +421,10 @@ type conn struct {
 	detached bool
 	closed   bool
 	cmds     []Command
+}
+
+func (c *conn) FlushOut() {
+	c.wr.Flush()
 }
 
 func (c *conn) Close() error {
